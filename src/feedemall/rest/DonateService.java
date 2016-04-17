@@ -3,6 +3,7 @@ package feedemall.rest;
 import static com.mongodb.client.model.Filters.eq;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -25,7 +26,7 @@ import feedemall.util.Util;
 
 @Path("donate")
 public class DonateService {
-
+	
 	@POST
 	@Consumes("application/x-www-form-urlencoded")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -35,12 +36,18 @@ public class DonateService {
 		MongoCollection<Document> collection = manager.getDatabase().getCollection("donations");
 		MongoCollection<Document> userColl = manager.getDatabase().getCollection("users");
 		String result = "";
-		String time;
+
 		Calendar calendar = Calendar.getInstance();
 		
 		Date date = calendar.getTime();
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 		
-		time = date.toString();
+		String time = format1.format(date);
+		
+		lat = Util.getLat(address);
+		longitude = Util.getLong(address);
+		
+		
 		
 		Document newDoc = new Document("restName", restName)
 	               .append("address", address)

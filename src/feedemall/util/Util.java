@@ -169,5 +169,44 @@ public class Util {
 		System.out.println("Longitude : " + long1);
 		return long1;
 	}
+
+	public static String getZip(String lat, String lng) throws ClientProtocolException, IOException, JSONException {
+		
+		// TODO Auto-generated method stub
+		StringBuilder uri = new StringBuilder();
+		uri.append("https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCxLDQyi8iKvpbUdbKetIeGASXu6iUBLPA&latlng=");
+		uri.append(lat);
+		uri.append(",");
+		uri.append(lng);
+		uri.append("&result_type=postal_code");
+
+		String url = uri.toString();
+		
+		HttpClient client = new DefaultHttpClient();
+		HttpGet request = new HttpGet(url);
+		
+		HttpResponse response = client.execute(request);
+		
+		BufferedReader rd = new BufferedReader(
+                new InputStreamReader(response.getEntity().getContent()));
+
+		StringBuffer result = new StringBuffer();
+		String line = "";
+		while ((line = rd.readLine()) != null) {
+			result.append(line);
+		}
+	
+//		System.out.println(result.toString());
+		
+		JSONObject obj = new JSONObject(result.toString());
+		JSONArray arr = obj.getJSONArray("results").getJSONObject(0).getJSONArray("address_components");
+		
+		JSONObject obj1 = arr.getJSONObject(0);
+		String zipcode = obj1.getString("long_name");
+		
+		System.out.println("Zipcode : " + zipcode);
+		
+		return zipcode;
+	}
 	
 }
